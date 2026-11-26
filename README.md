@@ -39,7 +39,7 @@ Karena **PixelStudio** dibangun dalam satu file HTML mandiri tanpa ketergantunga
 ### 1. Menjalankan Secara Lokal (VS Code)
 1. *Clone* atau unduh repositori ini:
    ```bash
-   git clone https://github.com/username-anda/pixelstudio.git
+   git clone https://github.com/hardypx/pixelstudio.git
    cd pixelstudio
    ```
 2. Buka folder di **VS Code**, klik kanan pada file `index.html`, lalu pilih **Open with Live Server**.
@@ -48,7 +48,7 @@ Karena **PixelStudio** dibangun dalam satu file HTML mandiri tanpa ketergantunga
 1. *Push* file `index.html` dan `README.md` ke repositori `pixelstudio` di GitHub Anda.
 2. Buka tab **Settings** $\rightarrow$ **Pages** di repositori GitHub.
 3. Pada bagian **Branch**, pilih `main` dan folder `/ (root)`, lalu klik **Save**.
-4. Aplikasi siap diakses secara *online* melalui URL `https://username-anda.github.io/pixelstudio/`.
+4. Aplikasi siap diakses secara *online* melalui URL `https://hardypx.github.io/pixelstudio/`.
 
 ## 🔐 Keamanan API Key
 Seluruh API Key (Fish Audio, ElevenLabs, maupun Gemini API) yang Anda masukkan disimpan secara lokal di browser Anda melalui `localStorage` (`hardy_clone_api_key` & `hardy_gemini_api_key`) dan tidak pernah dikirim ke server pihak ketiga selain endpoint resmi penyedia AI yang Anda pilih.
