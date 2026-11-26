@@ -56,5 +56,4 @@ Seluruh API Key (Fish Audio, ElevenLabs, maupun Gemini API) yang Anda masukkan d
 ## 📄 Lisensi
 Proyek ini dirilis di bawah lisensi **MIT** — bebas digunakan, dimodifikasi, dan dikembangkan untuk kebutuhan produksi konten pribadi maupun komersial.
 
----
-Dibuat oleh [**@hardy.px**](https://github.com/)
+-- [**@hardy.px**](https://github.com/hardypx)
