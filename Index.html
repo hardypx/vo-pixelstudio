@@ -117,13 +117,10 @@
     }
 
     @keyframes pulseDot {
-
-      0%,
-      100% {
+      0%, 100% {
         transform: scale(1);
         opacity: 1;
       }
-
       50% {
         transform: scale(1.3);
         opacity: 0.7;
@@ -169,7 +166,7 @@
         <div id="engineBadge"
           class="hidden md:flex items-center gap-2 bg-canvas border-2 border-ink rounded-full px-3.5 py-1.5 font-mono text-xs font-bold">
           <span class="w-2.5 h-2.5 rounded-full bg-teal live-dot"></span>
-          <span id="engineBadgeText">VOICE CLONE READY</span>
+          <span id="engineBadgeText">FISH AUDIO READY</span>
         </div>
         <span
           class="bg-mint border-[2.5px] border-ink rounded-full px-4 py-1.5 font-mono text-xs sm:text-sm font-extrabold shadow-brutal-sm">
@@ -260,8 +257,7 @@
       <div class="bg-card border-[3px] border-ink rounded-[32px] shadow-brutal p-5 sm:p-6">
         <div class="flex items-center justify-between pb-4 border-b-[2.5px] border-ink/15">
           <div class="flex items-center gap-2">
-            <span class="bg-teal text-white font-mono text-xs font-bold px-3 py-1 rounded-full border border-ink">AUDIO
-              ENGINE</span>
+            <span class="bg-teal text-white font-mono text-xs font-bold px-3 py-1 rounded-full border border-ink">AUDIO ENGINE</span>
             <h2 class="font-extrabold text-base sm:text-lg">Pilih Sumber Suara</h2>
           </div>
         </div>
@@ -282,38 +278,43 @@
           </button>
         </div>
 
-        <!-- TAB 1: VOICE CLONE (TEMPLATE SUARA LUAR) -->
+        <!-- TAB 1: VOICE CLONE (FISH AUDIO & ELEVENLABS) -->
         <div id="cloneOptions" class="mt-4 space-y-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block font-mono text-[11px] font-extrabold uppercase mb-1">Provider Voice Clone</label>
+              <label for="cloneProvider" class="block font-mono text-[11px] font-extrabold uppercase mb-1">Provider Voice Clone</label>
               <div class="relative">
                 <select id="cloneProvider"
                   class="w-full appearance-none bg-canvas border-[2.5px] border-ink rounded-2xl px-3.5 py-2.5 font-sans text-xs font-bold text-ink focus:outline-none focus:bg-white">
-                  <option value="fish">Fish Audio (Instant Clone)</option>
-                  <option value="elevenlabs">ElevenLabs (Instant Clone)</option>
-                  <option value="acoustic">Local Acoustic Matcher (Tanpa API)</option>
+                  <option value="fish">🐟 Fish Audio (Instant Clone)</option>
+                  <option value="elevenlabs">🎙️ ElevenLabs (Instant Clone)</option>
                 </select>
                 <i data-lucide="chevron-down"
                   class="w-4 h-4 text-ink absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
               </div>
             </div>
 
-            <div id="cloneApiKeyGroup">
-              <label class="block font-mono text-[11px] font-extrabold uppercase mb-1">API Key Provider</label>
-              <input id="cloneApiKey" type="password" placeholder="Tempel API Key..."
-                class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl px-3.5 py-2.5 font-mono text-xs font-bold text-ink focus:outline-none focus:bg-white" />
+            <div>
+              <label id="cloneApiKeyLabel" for="cloneApiKey" class="block font-mono text-[11px] font-extrabold uppercase mb-1">
+                Fish Audio API Key
+              </label>
+              <div class="relative">
+                <input id="cloneApiKey" type="password" placeholder="Tempel Fish API Key..."
+                  class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl pl-3.5 pr-9 py-2.5 font-mono text-xs font-bold text-ink focus:outline-none focus:bg-white" />
+                <button id="btnToggleCloneKey" type="button" title="Tampilkan / Sembunyikan API Key"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-ink/70 hover:text-ink">
+                  <span id="cloneEyeWrap"><i data-lucide="eye" class="w-3.5 h-3.5"></i></span>
+                </button>
+              </div>
             </div>
           </div>
 
           <!-- Upload Reference Template Audio Box -->
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="font-mono text-[11px] font-extrabold uppercase">Upload Sampel Suara Template
-                (10–30d)</label>
-              <span id="templateAnalysisBadge"
-                class="hidden font-mono text-[10px] font-extrabold bg-ink text-mint px-2 py-0.5 rounded-full">Profil
-                Nada Terdeteksi</span>
+              <label class="font-mono text-[11px] font-extrabold uppercase">Upload Sampel Suara Template (10–30d)</label>
+              <span id="templateDurationBadge"
+                class="hidden font-mono text-[10px] font-extrabold bg-ink text-mint px-2 py-0.5 rounded-full"></span>
             </div>
 
             <label id="dropZoneTemplate" for="templateAudioInput"
@@ -345,16 +346,17 @@
             </div>
           </div>
 
-          <!-- Optional Sample Transcript for Fish Audio Accuracy -->
-          <div id="transcriptGroup">
-            <label class="block font-mono text-[11px] font-extrabold uppercase mb-1">Transkrip Sampel (Opsional -
-              Akurasi Tinggi)</label>
+          <!-- Fish Audio Specific: Sample Transcript -->
+          <div id="fishTranscriptGroup">
+            <label for="templateTranscript" class="block font-mono text-[11px] font-extrabold uppercase mb-1">
+              Transkrip Sampel (Opsional - Akurasi Fish Audio)
+            </label>
             <input id="templateTranscript" type="text" placeholder="Ketik kalimat yang diucapkan di file sampel..."
               class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl px-3.5 py-2.5 font-sans text-xs font-medium text-ink focus:outline-none focus:bg-white" />
           </div>
 
-          <!-- Similarity & Style Sliders -->
-          <div class="grid grid-cols-2 gap-3 pt-1">
+          <!-- ElevenLabs Specific: Similarity & Style Sliders -->
+          <div id="elevenSlidersGroup" class="hidden grid grid-cols-2 gap-3 pt-1">
             <div>
               <div class="flex justify-between items-center mb-1">
                 <label for="similaritySlider" class="font-mono text-[10px] font-extrabold uppercase">Kemiripan</label>
@@ -375,14 +377,19 @@
         <!-- TAB 2: GEMINI AI OPTIONS -->
         <div id="geminiOptions" class="mt-4 space-y-3.5 hidden">
           <div>
-            <label class="block font-mono text-[11px] font-extrabold uppercase mb-1">Gemini API Key (Opsional di
-              Preview)</label>
-            <input id="geminiApiKey" type="password" placeholder="Kosongkan jika pakai key bawaan atau isi AIza..."
-              class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl px-3.5 py-2.5 font-mono text-xs font-bold text-ink focus:outline-none focus:bg-white" />
+            <label for="geminiApiKey" class="block font-mono text-[11px] font-extrabold uppercase mb-1">Gemini API Key</label>
+            <div class="relative">
+              <input id="geminiApiKey" type="password" placeholder="Tempel Gemini API Key (AIza...)..."
+                class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl pl-3.5 pr-9 py-2.5 font-mono text-xs font-bold text-ink focus:outline-none focus:bg-white" />
+              <button id="btnToggleGeminiKey" type="button" title="Tampilkan / Sembunyikan API Key"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-ink/70 hover:text-ink">
+                <span id="geminiEyeWrap"><i data-lucide="eye" class="w-3.5 h-3.5"></i></span>
+              </button>
+            </div>
           </div>
 
           <div>
-            <label class="block font-mono text-[11px] font-extrabold uppercase mb-1">Karakter Suara AI</label>
+            <label for="geminiVoice" class="block font-mono text-[11px] font-extrabold uppercase mb-1">Karakter Suara AI</label>
             <div class="relative">
               <select id="geminiVoice"
                 class="w-full appearance-none bg-canvas border-[2.5px] border-ink rounded-2xl px-4 py-2.5 font-sans text-xs sm:text-sm font-bold text-ink focus:outline-none focus:bg-white">
@@ -401,7 +408,7 @@
           </div>
 
           <div>
-            <label class="block font-mono text-[11px] font-extrabold uppercase mb-1">Instruksi Gaya Bicara</label>
+            <label for="geminiStyle" class="block font-mono text-[11px] font-extrabold uppercase mb-1">Instruksi Gaya Bicara</label>
             <input id="geminiStyle" type="text"
               value="Bacakan dengan gaya kreator edukasi teknologi Indonesia yang energik, tegas di awal, dan natural"
               class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl px-3.5 py-2.5 font-sans text-xs font-bold text-ink focus:outline-none focus:bg-white" />
@@ -411,8 +418,7 @@
         <!-- TAB 3: BROWSER NATIVE OPTIONS -->
         <div id="browserOptions" class="mt-4 space-y-3 hidden">
           <div>
-            <label class="block font-mono text-[11px] font-extrabold uppercase mb-1">Pilih Suara Browser (Gratis
-              Offline)</label>
+            <label for="browserVoiceSelect" class="block font-mono text-[11px] font-extrabold uppercase mb-1">Pilih Suara Browser (Gratis Offline)</label>
             <div class="relative">
               <select id="browserVoiceSelect"
                 class="w-full appearance-none bg-canvas border-[2.5px] border-ink rounded-2xl px-4 py-2.5 font-sans text-xs sm:text-sm font-bold text-ink focus:outline-none focus:bg-white">
@@ -438,12 +444,11 @@
             <input id="rateSlider" type="range" min="0.85" max="1.30" step="0.05" value="1.05" class="w-full" />
           </div>
 
-          <div>
+          <div id="pitchControlGroup">
             <div class="flex justify-between items-center mb-1">
               <label for="pitchSlider" class="font-mono text-[11px] font-extrabold uppercase">Pitch (Semi)</label>
               <span id="pitchValue"
-                class="bg-canvas border border-ink rounded-md px-1.5 py-0.5 font-mono text-[11px] font-extrabold">0
-                st</span>
+                class="bg-canvas border border-ink rounded-md px-1.5 py-0.5 font-mono text-[11px] font-extrabold">0 st</span>
             </div>
             <input id="pitchSlider" type="range" min="-4" max="4" step="1" value="0" class="w-full" />
           </div>
@@ -453,7 +458,7 @@
         <button id="btnGenerate" type="button"
           class="mt-5 w-full btn-brutal bg-teal text-white border-[3px] border-ink rounded-[22px] py-3.5 px-5 font-extrabold text-base sm:text-lg shadow-brutal flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:cursor-not-allowed">
           <i data-lucide="mic-2" class="w-5 h-5"></i>
-          <span id="btnGenerateText">🎙️ Generate Voice Clone</span>
+          <span id="btnGenerateText">🐟 Generate Fish Clone</span>
         </button>
       </div>
 
@@ -473,8 +478,7 @@
         <div class="bg-ink rounded-[22px] border-[3px] border-ink p-3 relative overflow-hidden">
           <canvas id="waveformCanvas" class="w-full h-24 block"></canvas>
           <div id="waveformPlaceholder" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span class="font-mono text-xs text-mint/70 tracking-wider uppercase">Klik Generate untuk memproses
-              suara</span>
+            <span class="font-mono text-xs text-mint/70 tracking-wider uppercase">Klik Generate untuk memproses suara</span>
           </div>
         </div>
 
@@ -482,7 +486,7 @@
         <div class="mt-4 flex items-center gap-3">
           <button id="btnPlayPause" type="button" disabled
             class="btn-brutal bg-mint text-ink border-[2.5px] border-ink rounded-2xl w-12 h-12 flex items-center justify-center shadow-brutal-sm disabled:opacity-40 disabled:pointer-events-none shrink-0">
-            <i id="playPauseIcon" data-lucide="play" class="w-5 h-5 fill-ink"></i>
+            <span id="playPauseIconWrap"><i data-lucide="play" class="w-5 h-5 fill-ink"></i></span>
           </button>
 
           <div class="flex-1">
@@ -513,7 +517,7 @@
   <audio id="audioPlayer" crossorigin="anonymous"></audio>
 
   <script>
-    // Initialize Lucide Icons safely
+    // Initialize Lucide Icons safely once on load
     if (window.lucide) {
       lucide.createIcons();
     }
@@ -538,7 +542,95 @@ Intinya, [jeda 0.3s] AI itu akselerator super cepat. [jeda 0.3s] Tapi kamu tetap
 Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [jeda 0.3s] jangan lupa follow dan save video ini supaya nggak ketinggalan konten lainnya!`;
 
     // ==========================================
-    // 2. HELPER UTILITIES (STATS, AUDIO & TOAST)
+    // 2. DOM ELEMENTS & STATE
+    // ==========================================
+    const scriptInput = document.getElementById('scriptInput');
+    const wordCountEl = document.getElementById('wordCount');
+    const charCountEl = document.getElementById('charCount');
+    const estDurationEl = document.getElementById('estDuration');
+    const rateSlider = document.getElementById('rateSlider');
+    const rateValueEl = document.getElementById('rateValue');
+    const pitchSlider = document.getElementById('pitchSlider');
+    const pitchValueEl = document.getElementById('pitchValue');
+    const pitchControlGroup = document.getElementById('pitchControlGroup');
+
+    // Engine Tabs
+    const tabClone = document.getElementById('tabClone');
+    const tabGemini = document.getElementById('tabGemini');
+    const tabBrowser = document.getElementById('tabBrowser');
+    const cloneOptions = document.getElementById('cloneOptions');
+    const geminiOptions = document.getElementById('geminiOptions');
+    const browserOptions = document.getElementById('browserOptions');
+    const engineBadgeText = document.getElementById('engineBadgeText');
+
+    // Voice Clone Elements
+    const cloneProviderSelect = document.getElementById('cloneProvider');
+    const cloneApiKeyLabel = document.getElementById('cloneApiKeyLabel');
+    const cloneApiKeyInput = document.getElementById('cloneApiKey');
+    const btnToggleCloneKey = document.getElementById('btnToggleCloneKey');
+    const cloneEyeWrap = document.getElementById('cloneEyeWrap');
+    const fishTranscriptGroup = document.getElementById('fishTranscriptGroup');
+    const elevenSlidersGroup = document.getElementById('elevenSlidersGroup');
+    const templateAudioInput = document.getElementById('templateAudioInput');
+    const dropZoneTemplate = document.getElementById('dropZoneTemplate');
+    const templateFileNameEl = document.getElementById('templateFileName');
+    const templateDurationBadge = document.getElementById('templateDurationBadge');
+    const templatePreviewBox = document.getElementById('templatePreviewBox');
+    const templatePreviewPlayer = document.getElementById('templatePreviewPlayer');
+    const btnRemoveTemplate = document.getElementById('btnRemoveTemplate');
+    const templateTranscriptInput = document.getElementById('templateTranscript');
+    const similaritySlider = document.getElementById('similaritySlider');
+    const similarityValueEl = document.getElementById('similarityValue');
+    const styleExagSlider = document.getElementById('styleExagSlider');
+    const styleExagValueEl = document.getElementById('styleExagValue');
+
+    // Gemini & Browser Elements
+    const geminiApiKeyInput = document.getElementById('geminiApiKey');
+    const btnToggleGeminiKey = document.getElementById('btnToggleGeminiKey');
+    const geminiEyeWrap = document.getElementById('geminiEyeWrap');
+    const geminiVoiceSelect = document.getElementById('geminiVoice');
+    const geminiStyleInput = document.getElementById('geminiStyle');
+    const browserVoiceSelect = document.getElementById('browserVoiceSelect');
+
+    // Output Player Elements
+    const btnGenerate = document.getElementById('btnGenerate');
+    const btnGenerateText = document.getElementById('btnGenerateText');
+    const btnPlayPause = document.getElementById('btnPlayPause');
+    const playPauseIconWrap = document.getElementById('playPauseIconWrap');
+    const audioSeekSlider = document.getElementById('audioSeekSlider');
+    const currentAudioTimeEl = document.getElementById('currentAudioTime');
+    const totalAudioTimeEl = document.getElementById('totalAudioTime');
+    const btnDownload = document.getElementById('btnDownload');
+    const audioStatusTag = document.getElementById('audioStatusTag');
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    const waveformCanvas = document.getElementById('waveformCanvas');
+    const waveformPlaceholder = document.getElementById('waveformPlaceholder');
+    const waveCtx = waveformCanvas.getContext('2d');
+
+    let activeEngine = 'clone'; // 'clone' | 'gemini' | 'browser'
+    let playerMode = 'none'; // 'audio' | 'speech' | 'none'
+    let templateAudioFile = null;
+    let templatePreviewUrl = null;
+    let currentAudioUrl = null;
+    let audioCtx = null;
+    let analyser = null;
+    let mediaSource = null;
+    let animationFrameId = null;
+    let browserVoices = [];
+    let simInterval = null;
+    let isSeeking = false;
+
+    // Inline SVG templates to avoid repeated DOM-wide lucide.createIcons() scans
+    const ICONS = {
+      play: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#071B2B" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
+      pause: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#071B2B" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg>',
+      eye: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>',
+      eyeOff: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>'
+    };
+
+    // ==========================================
+    // 3. HELPER UTILITIES
     // ==========================================
     function formatTime(seconds) {
       if (!isFinite(seconds) || seconds < 0) return '00:00';
@@ -566,7 +658,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(8px)';
         setTimeout(() => toast.remove(), 220);
-      }, 3600);
+      }, 3800);
     }
 
     function prepareSpeechText(raw) {
@@ -576,6 +668,23 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         .replace(/\[[^\]]+\]/g, '')
         .replace(/\s+/g, ' ')
         .trim();
+    }
+
+    function stopAllActivePlayback() {
+      // Stop HTML5 Audio
+      if (!audioPlayer.paused) {
+        audioPlayer.pause();
+      }
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      // Stop Web Speech Synthesis
+      if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.paused)) {
+        window.speechSynthesis.cancel();
+      }
+      stopSimulatedWaveform();
+      updatePlayIcon(false);
     }
 
     function updateScriptStats() {
@@ -591,7 +700,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       const words = cleanText ? cleanText.split(/\s+/).filter(Boolean) : [];
       const rate = parseFloat(rateSlider.value) || 1.05;
 
-      // Average Indonesian VO pace ~2.45 words/sec at 1.0x
       const estSeconds = words.length > 0 ? Math.round((words.length / (2.45 * rate)) + extraPauseSec) : 0;
 
       wordCountEl.textContent = words.length;
@@ -664,214 +772,100 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     }
 
     // ==========================================
-    // 3. DOM ELEMENTS & STATE
+    // 4. API KEY & PROVIDER STATE MANAGEMENT
     // ==========================================
-    const scriptInput = document.getElementById('scriptInput');
-    const wordCountEl = document.getElementById('wordCount');
-    const charCountEl = document.getElementById('charCount');
-    const estDurationEl = document.getElementById('estDuration');
-    const rateSlider = document.getElementById('rateSlider');
-    const rateValueEl = document.getElementById('rateValue');
-    const pitchSlider = document.getElementById('pitchSlider');
-    const pitchValueEl = document.getElementById('pitchValue');
+    function getCloneStorageKey(provider) {
+      return provider === 'fish' ? 'hardy_fish_api_key' : 'hardy_eleven_api_key';
+    }
 
-    const tabClone = document.getElementById('tabClone');
-    const tabGemini = document.getElementById('tabGemini');
-    const tabBrowser = document.getElementById('tabBrowser');
-    const cloneOptions = document.getElementById('cloneOptions');
-    const geminiOptions = document.getElementById('geminiOptions');
-    const browserOptions = document.getElementById('browserOptions');
-    const engineBadgeText = document.getElementById('engineBadgeText');
+    const savedProvider = localStorage.getItem('hardy_clone_provider') === 'elevenlabs' ? 'elevenlabs' : 'fish';
+    cloneProviderSelect.value = savedProvider;
+    const legacyCloneKey = localStorage.getItem('hardy_clone_api_key');
+    if (legacyCloneKey && !localStorage.getItem(getCloneStorageKey(savedProvider))) {
+      localStorage.setItem(getCloneStorageKey(savedProvider), legacyCloneKey);
+    }
 
-    // Voice Clone Elements
-    const cloneProviderSelect = document.getElementById('cloneProvider');
-    const cloneApiKeyInput = document.getElementById('cloneApiKey');
-    const cloneApiKeyGroup = document.getElementById('cloneApiKeyGroup');
-    const transcriptGroup = document.getElementById('transcriptGroup');
-    const templateAudioInput = document.getElementById('templateAudioInput');
-    const dropZoneTemplate = document.getElementById('dropZoneTemplate');
-    const templateFileNameEl = document.getElementById('templateFileName');
-    const templatePreviewBox = document.getElementById('templatePreviewBox');
-    const templatePreviewPlayer = document.getElementById('templatePreviewPlayer');
-    const btnRemoveTemplate = document.getElementById('btnRemoveTemplate');
-    const templateTranscriptInput = document.getElementById('templateTranscript');
-    const templateAnalysisBadge = document.getElementById('templateAnalysisBadge');
-    const similaritySlider = document.getElementById('similaritySlider');
-    const similarityValueEl = document.getElementById('similarityValue');
-    const styleExagSlider = document.getElementById('styleExagSlider');
-    const styleExagValueEl = document.getElementById('styleExagValue');
-
-    // Gemini & Browser Elements
-    const geminiApiKeyInput = document.getElementById('geminiApiKey');
-    const geminiVoiceSelect = document.getElementById('geminiVoice');
-    const geminiStyleSelect = document.getElementById('geminiStyle');
-    const browserVoiceSelect = document.getElementById('browserVoiceSelect');
-
-    const btnGenerate = document.getElementById('btnGenerate');
-    const btnGenerateText = document.getElementById('btnGenerateText');
-    const btnPlayPause = document.getElementById('btnPlayPause');
-    const playPauseIcon = document.getElementById('playPauseIcon');
-    const audioSeekSlider = document.getElementById('audioSeekSlider');
-    const currentAudioTimeEl = document.getElementById('currentAudioTime');
-    const totalAudioTimeEl = document.getElementById('totalAudioTime');
-    const btnDownload = document.getElementById('btnDownload');
-    const audioStatusTag = document.getElementById('audioStatusTag');
-    const audioPlayer = document.getElementById('audioPlayer');
-
-    const waveformCanvas = document.getElementById('waveformCanvas');
-    const waveformPlaceholder = document.getElementById('waveformPlaceholder');
-    const waveCtx = waveformCanvas.getContext('2d');
-
-    let activeEngine = 'clone'; // 'clone' | 'gemini' | 'browser'
-    let templateAudioFile = null;
-    let templatePreviewUrl = null;
-    let detectedTemplateProfile = { pitchSemitones: 0, brightness: 1.0, avgPitchHz: 140 };
-    let currentAudioUrl = null;
-    let audioCtx = null;
-    let analyser = null;
-    let mediaSource = null;
-    let animationFrameId = null;
-    let browserVoices = [];
-
-    // Restore saved API keys from localStorage
-    cloneApiKeyInput.value = localStorage.getItem('hardy_clone_api_key') || '';
     geminiApiKeyInput.value = localStorage.getItem('hardy_gemini_api_key') || '';
-    cloneProviderSelect.value = localStorage.getItem('hardy_clone_provider') || 'fish';
-
-    cloneApiKeyInput.addEventListener('input', () => {
-      localStorage.setItem('hardy_clone_api_key', cloneApiKeyInput.value.trim());
-    });
-    geminiApiKeyInput.addEventListener('input', () => {
-      localStorage.setItem('hardy_gemini_api_key', geminiApiKeyInput.value.trim());
-    });
-    cloneProviderSelect.addEventListener('change', () => {
-      localStorage.setItem('hardy_clone_provider', cloneProviderSelect.value);
-      updateCloneProviderUI();
-    });
 
     function updateCloneProviderUI() {
       const prov = cloneProviderSelect.value;
-      if (prov === 'acoustic') {
-        cloneApiKeyGroup.classList.add('opacity-40', 'pointer-events-none');
-        transcriptGroup.classList.add('hidden');
-      } else if (prov === 'elevenlabs') {
-        cloneApiKeyGroup.classList.remove('opacity-40', 'pointer-events-none');
-        transcriptGroup.classList.add('hidden');
+      localStorage.setItem('hardy_clone_provider', prov);
+
+      if (prov === 'fish') {
+        cloneApiKeyLabel.textContent = 'Fish Audio API Key';
+        cloneApiKeyInput.placeholder = 'Tempel Fish API Key...';
+        fishTranscriptGroup.classList.remove('hidden');
+        elevenSlidersGroup.classList.add('hidden');
+        if (activeEngine === 'clone') {
+          btnGenerateText.textContent = '🐟 Generate Fish Clone';
+          engineBadgeText.textContent = 'FISH AUDIO READY';
+        }
       } else {
-        cloneApiKeyGroup.classList.remove('opacity-40', 'pointer-events-none');
-        transcriptGroup.classList.remove('hidden');
+        cloneApiKeyLabel.textContent = 'ElevenLabs API Key';
+        cloneApiKeyInput.placeholder = 'Tempel ElevenLabs Key...';
+        fishTranscriptGroup.classList.add('hidden');
+        elevenSlidersGroup.classList.remove('hidden');
+        if (activeEngine === 'clone') {
+          btnGenerateText.textContent = '🎙️ Generate ElevenLabs';
+          engineBadgeText.textContent = 'ELEVENLABS READY';
+        }
       }
+
+      cloneApiKeyInput.value = localStorage.getItem(getCloneStorageKey(prov)) || '';
     }
+
+    cloneProviderSelect.addEventListener('change', updateCloneProviderUI);
+
+    cloneApiKeyInput.addEventListener('input', () => {
+      localStorage.setItem(getCloneStorageKey(cloneProviderSelect.value), cloneApiKeyInput.value.trim());
+    });
+
+    geminiApiKeyInput.addEventListener('input', () => {
+      localStorage.setItem('hardy_gemini_api_key', geminiApiKeyInput.value.trim());
+    });
+
+    btnToggleCloneKey.addEventListener('click', () => {
+      const isPass = cloneApiKeyInput.type === 'password';
+      cloneApiKeyInput.type = isPass ? 'text' : 'password';
+      cloneEyeWrap.innerHTML = isPass ? ICONS.eyeOff : ICONS.eye;
+    });
+
+    btnToggleGeminiKey.addEventListener('click', () => {
+      const isPass = geminiApiKeyInput.type === 'password';
+      geminiApiKeyInput.type = isPass ? 'text' : 'password';
+      geminiEyeWrap.innerHTML = isPass ? ICONS.eyeOff : ICONS.eye;
+    });
+
     updateCloneProviderUI();
     updateScriptStats();
 
+    // ==========================================
+    // 5. SCRIPT EDITOR & SLIDERS
+    // ==========================================
     scriptInput.addEventListener('input', updateScriptStats);
+
     rateSlider.addEventListener('input', () => {
-      rateValueEl.textContent = `${parseFloat(rateSlider.value).toFixed(2)}x`;
+      const rate = parseFloat(rateSlider.value);
+      rateValueEl.textContent = `${rate.toFixed(2)}x`;
       if (audioPlayer.src) {
-        audioPlayer.playbackRate = parseFloat(rateSlider.value);
+        audioPlayer.playbackRate = rate;
       }
       updateScriptStats();
     });
+
     pitchSlider.addEventListener('input', () => {
       const val = parseInt(pitchSlider.value, 10);
       pitchValueEl.textContent = `${val > 0 ? '+' : ''}${val} st`;
     });
+
     similaritySlider.addEventListener('input', () => {
       similarityValueEl.textContent = `${similaritySlider.value}%`;
     });
+
     styleExagSlider.addEventListener('input', () => {
       styleExagValueEl.textContent = `${styleExagSlider.value}%`;
     });
 
-    // ==========================================
-    // 4. TEMPLATE SAMPLE UPLOAD & ACOUSTIC ANALYZER
-    // ==========================================
-    async function analyzeTemplateAudio(file) {
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const audioBuffer = await tempCtx.decodeAudioData(arrayBuffer);
-        const channelData = audioBuffer.getChannelData(0);
-        const sampleRate = audioBuffer.sampleRate;
-
-        let zeroCrossings = 0;
-        let activeSamples = 0;
-        const limit = Math.min(channelData.length, sampleRate * 15);
-        for (let i = 1; i < limit; i++) {
-          if (Math.abs(channelData[i]) > 0.02) {
-            activeSamples++;
-            if ((channelData[i - 1] < 0 && channelData[i] >= 0) || (channelData[i - 1] >= 0 && channelData[i] < 0)) {
-              zeroCrossings++;
-            }
-          }
-        }
-        const activeSeconds = Math.max(0.5, activeSamples / sampleRate);
-        const estFreq = Math.min(280, Math.max(85, (zeroCrossings / 2) / activeSeconds * 0.45));
-        const semitoneShift = Math.max(-4, Math.min(4, Math.round(12 * Math.log2(estFreq / 145))));
-
-        detectedTemplateProfile = {
-          pitchSemitones: semitoneShift,
-          avgPitchHz: Math.round(estFreq)
-        };
-
-        templateAnalysisBadge.textContent = `Profil: ~${detectedTemplateProfile.avgPitchHz}Hz (${semitoneShift >= 0 ? '+' : ''}${semitoneShift} st)`;
-        templateAnalysisBadge.classList.remove('hidden');
-        tempCtx.close();
-      } catch (e) {
-        console.warn('Acoustic profile scan skipped:', e);
-      }
-    }
-
-    function handleTemplateFile(file) {
-      if (!file || !file.type.startsWith('audio/')) {
-        showToast('Harap pilih file audio (.mp3, .wav, .m4a)!', 'error');
-        return;
-      }
-      templateAudioFile = file;
-      if (templatePreviewUrl) URL.revokeObjectURL(templatePreviewUrl);
-      templatePreviewUrl = URL.createObjectURL(file);
-
-      templateFileNameEl.textContent = `✅ ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
-      templatePreviewPlayer.src = templatePreviewUrl;
-      templatePreviewBox.classList.remove('hidden');
-
-      analyzeTemplateAudio(file);
-      showToast('Sampel suara template berhasil dimuat!', 'success');
-    }
-
-    templateAudioInput.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files[0]) {
-        handleTemplateFile(e.target.files[0]);
-      }
-    });
-
-    dropZoneTemplate.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropZoneTemplate.classList.add('bg-mint');
-    });
-    dropZoneTemplate.addEventListener('dragleave', () => {
-      dropZoneTemplate.classList.remove('bg-mint');
-    });
-    dropZoneTemplate.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropZoneTemplate.classList.remove('bg-mint');
-      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-        handleTemplateFile(e.dataTransfer.files[0]);
-      }
-    });
-
-    btnRemoveTemplate.addEventListener('click', () => {
-      templateAudioFile = null;
-      templateAudioInput.value = '';
-      if (templatePreviewUrl) URL.revokeObjectURL(templatePreviewUrl);
-      templatePreviewUrl = null;
-      templatePreviewBox.classList.add('hidden');
-      templateAnalysisBadge.classList.add('hidden');
-      templateFileNameEl.textContent = 'Klik atau tarik file template suara (.mp3 / .wav)';
-    });
-
-    // Quick Tag Insertion at Cursor Position
     document.querySelectorAll('.insert-tag-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const tag = btn.getAttribute('data-insert');
@@ -904,7 +898,69 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     });
 
     // ==========================================
-    // 5. ENGINE TABS & BROWSER VOICES SETUP
+    // 6. TEMPLATE AUDIO UPLOAD HANDLER
+    // ==========================================
+    function handleTemplateFile(file) {
+      if (!file || !file.type.startsWith('audio/')) {
+        showToast('Harap pilih file audio (.mp3, .wav, .m4a)!', 'error');
+        return;
+      }
+      templateAudioFile = file;
+      if (templatePreviewUrl) URL.revokeObjectURL(templatePreviewUrl);
+      templatePreviewUrl = URL.createObjectURL(file);
+
+      templateFileNameEl.textContent = `✅ ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
+      templatePreviewPlayer.src = templatePreviewUrl;
+      templatePreviewBox.classList.remove('hidden');
+      showToast('Sampel suara template berhasil dimuat!', 'success');
+    }
+
+    templatePreviewPlayer.addEventListener('loadedmetadata', () => {
+      const dur = templatePreviewPlayer.duration;
+      if (isFinite(dur)) {
+        templateDurationBadge.textContent = `Durasi: ${formatTime(dur)}`;
+        templateDurationBadge.classList.remove('hidden');
+        if (dur > 45) {
+          showToast('Tips: Sampel di atas 45 detik berisiko timeout. Idealnya 10–30 detik.', 'info');
+        }
+      }
+    });
+
+    templateAudioInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleTemplateFile(e.target.files[0]);
+      }
+    });
+
+    dropZoneTemplate.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZoneTemplate.classList.add('bg-mint');
+    });
+
+    dropZoneTemplate.addEventListener('dragleave', () => {
+      dropZoneTemplate.classList.remove('bg-mint');
+    });
+
+    dropZoneTemplate.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZoneTemplate.classList.remove('bg-mint');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleTemplateFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    btnRemoveTemplate.addEventListener('click', () => {
+      templateAudioFile = null;
+      templateAudioInput.value = '';
+      if (templatePreviewUrl) URL.revokeObjectURL(templatePreviewUrl);
+      templatePreviewUrl = null;
+      templatePreviewBox.classList.add('hidden');
+      templateDurationBadge.classList.add('hidden');
+      templateFileNameEl.textContent = 'Klik atau tarik file template suara (.mp3 / .wav)';
+    });
+
+    // ==========================================
+    // 7. ENGINE SWITCHER & BROWSER VOICES
     // ==========================================
     function switchEngine(engine) {
       activeEngine = engine;
@@ -919,13 +975,14 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       geminiOptions.classList.toggle('hidden', engine !== 'gemini');
       browserOptions.classList.toggle('hidden', engine !== 'browser');
 
+      pitchControlGroup.classList.toggle('opacity-40', engine === 'clone');
+      pitchControlGroup.classList.toggle('pointer-events-none', engine === 'clone');
+
       if (engine === 'clone') {
-        btnGenerateText.textContent = '🎙️ Generate Voice Clone';
-        engineBadgeText.textContent = 'VOICE CLONE READY';
+        updateCloneProviderUI();
       } else if (engine === 'gemini') {
         btnGenerateText.textContent = '✨ Generate Gemini AI';
         engineBadgeText.textContent = 'GEMINI 2.5 TTS READY';
-        loadBrowserVoices();
       } else {
         btnGenerateText.textContent = '💻 Putar Suara Browser';
         engineBadgeText.textContent = 'BROWSER OFFLINE TTS';
@@ -965,15 +1022,19 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       window.speechSynthesis.onvoiceschanged = loadBrowserVoices;
     }
 
+    switchEngine('clone');
+
     // ==========================================
-    // 6. VOICE CLONE, GEMINI & BROWSER ENGINES
+    // 8. AUDIO GENERATION ENGINES (CLONE, GEMINI, BROWSER)
     // ==========================================
     function loadAudioBlobIntoPlayer(blob, label) {
+      stopAllActivePlayback();
       if (currentAudioUrl) URL.revokeObjectURL(currentAudioUrl);
       currentAudioUrl = URL.createObjectURL(blob);
 
+      playerMode = 'audio';
       audioPlayer.src = currentAudioUrl;
-      audioPlayer.playbackRate = 1.0;
+      audioPlayer.playbackRate = parseFloat(rateSlider.value) || 1.05;
       btnDownload.href = currentAudioUrl;
       btnDownload.download = 'vo.wav';
       btnDownload.classList.remove('opacity-40', 'pointer-events-none');
@@ -981,6 +1042,90 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       audioSeekSlider.disabled = false;
       waveformPlaceholder.classList.add('hidden');
       audioStatusTag.textContent = label;
+    }
+
+    async function cloneWithFishAudio(apiKey, cleanScript) {
+      if (window.location.protocol === 'file:') {
+        throw new Error('Buka lewat URL Vercel (https://) agar proxy /api/fish-tts berjalan');
+      }
+
+      const formData = new FormData();
+      formData.append('text', cleanScript);
+      formData.append('reference_audio', templateAudioFile, templateAudioFile.name);
+      if (templateTranscriptInput.value.trim()) {
+        formData.append('reference_text', templateTranscriptInput.value.trim());
+      }
+      formData.append('format', 'wav');
+
+      const response = await fetch('/api/fish-tts', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errMsg = await response.text();
+        throw new Error(`Fish Audio Error (${response.status}): ${errMsg.slice(0, 120)}`);
+      }
+
+      return await response.blob();
+    }
+
+    async function cloneWithElevenLabs(apiKey, cleanScript) {
+      const similarity = parseInt(similaritySlider.value, 10) / 100;
+      const styleExag = parseInt(styleExagSlider.value, 10) / 100;
+
+      const addForm = new FormData();
+      addForm.append('name', `pixelStudio_Temp_${Date.now()}`);
+      addForm.append('files', templateAudioFile, templateAudioFile.name);
+      addForm.append('description', 'pixelStudio-VO Temporary Clone');
+
+      const addRes = await fetch('https://api.elevenlabs.io/v1/voices/add', {
+        method: 'POST',
+        headers: { 'xi-api-key': apiKey },
+        body: addForm
+      });
+
+      if (!addRes.ok) {
+        const errJson = await addRes.json().catch(() => ({}));
+        throw new Error(errJson?.detail?.message || `ElevenLabs Add Voice Error (${addRes.status})`);
+      }
+
+      const { voice_id } = await addRes.json();
+
+      try {
+        const ttsRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, {
+          method: 'POST',
+          headers: {
+            'xi-api-key': apiKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            text: cleanScript,
+            model_id: 'eleven_multilingual_v2',
+            voice_settings: {
+              stability: Math.max(0.2, 1 - styleExag * 0.5),
+              similarity_boost: similarity,
+              style: styleExag,
+              use_speaker_boost: true
+            }
+          })
+        });
+
+        if (!ttsRes.ok) {
+          const ttsErr = await ttsRes.json().catch(() => ({}));
+          throw new Error(ttsErr?.detail?.message || `ElevenLabs TTS Error (${ttsRes.status})`);
+        }
+
+        return await ttsRes.blob();
+      } finally {
+        fetch(`https://api.elevenlabs.io/v1/voices/${voice_id}`, {
+          method: 'DELETE',
+          headers: { 'xi-api-key': apiKey }
+        }).catch(() => {});
+      }
     }
 
     async function generateVoiceClone() {
@@ -996,100 +1141,25 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
 
       const provider = cloneProviderSelect.value;
       const apiKey = cloneApiKeyInput.value.trim();
-      const cleanScript = prepareSpeechText(rawText);
-      const similarity = parseInt(similaritySlider.value, 10) / 100;
-      const styleExag = parseInt(styleExagSlider.value, 10) / 100;
-
-      if (provider === 'acoustic') {
-        pitchSlider.value = detectedTemplateProfile.pitchSemitones;
-        pitchValueEl.textContent = `${detectedTemplateProfile.pitchSemitones > 0 ? '+' : ''}${detectedTemplateProfile.pitchSemitones} st`;
-        const matchedVoice = detectedTemplateProfile.avgPitchHz > 165 ? 'Zephyr' : 'Puck';
-        geminiVoiceSelect.value = matchedVoice;
-        geminiStyleSelect.value = `Tiru intonasi, ritme, dan karakter vokal dengan nada dasar sekitar ${detectedTemplateProfile.avgPitchHz}Hz secara ekspresif dalam Bahasa Indonesia`;
-        showToast(`Profil nada template (${detectedTemplateProfile.avgPitchHz}Hz) diterapkan! Memproses suara...`, 'info');
-        await generateGeminiTTS(true);
-        return;
-      }
-
       if (!apiKey) {
-        showToast(`Masukkan API Key ${provider === 'fish' ? 'Fish Audio' : 'ElevenLabs'} atau pilih "Local Acoustic Matcher"!`, 'error');
+        showToast(`Masukkan API Key ${provider === 'fish' ? 'Fish Audio' : 'ElevenLabs'} terlebih dahulu!`, 'error');
         return;
       }
+
+      const cleanScript = prepareSpeechText(rawText);
 
       btnGenerate.disabled = true;
       btnGenerateText.textContent = 'Mengkloning Suara Template...';
       audioStatusTag.textContent = 'Cloning...';
 
       try {
+        let audioBlob;
         if (provider === 'fish') {
-          const formData = new FormData();
-          formData.append('text', cleanScript);
-          formData.append('reference_audio', templateAudioFile, templateAudioFile.name);
-          if (templateTranscriptInput.value.trim()) {
-            formData.append('reference_text', templateTranscriptInput.value.trim());
-          }
-          formData.append('format', 'wav');
-          formData.append('mp3_bitrate', '192');
-
-          const response = await fetch('https://api.fish.audio/v1/tts', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${apiKey}`
-            },
-            body: formData
-          });
-
-          if (!response.ok) {
-            const errMsg = await response.text();
-            throw new Error(`Fish Audio Error (${response.status}): ${errMsg.slice(0, 120)}`);
-          }
-
-          const audioBlob = await response.blob();
+          audioBlob = await cloneWithFishAudio(apiKey, cleanScript);
           loadAudioBlobIntoPlayer(audioBlob, 'Cloned (Fish Audio)');
           showToast('Voice Clone berhasil dibuat dengan Fish Audio!', 'success');
-
-        } else if (provider === 'elevenlabs') {
-          const addForm = new FormData();
-          addForm.append('name', `pixelStudio-VO_Template_${Date.now()}`);
-          addForm.append('files', templateAudioFile, templateAudioFile.name);
-          addForm.append('description', 'pixelStudio-VO Template Voice');
-
-          const addRes = await fetch('https://api.elevenlabs.io/v1/voices/add', {
-            method: 'POST',
-            headers: { 'xi-api-key': apiKey },
-            body: addForm
-          });
-
-          if (!addRes.ok) {
-            const errJson = await addRes.json().catch(() => ({}));
-            throw new Error(errJson?.detail?.message || `ElevenLabs Voice Add Error (${addRes.status})`);
-          }
-
-          const { voice_id } = await addRes.json();
-
-          const ttsRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, {
-            method: 'POST',
-            headers: {
-              'xi-api-key': apiKey,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              text: cleanScript,
-              model_id: 'eleven_multilingual_v2',
-              voice_settings: {
-                stability: Math.max(0.2, 1 - styleExag * 0.5),
-                similarity_boost: similarity,
-                style: styleExag,
-                use_speaker_boost: true
-              }
-            })
-          });
-
-          if (!ttsRes.ok) {
-            throw new Error(`ElevenLabs TTS Error (${ttsRes.status})`);
-          }
-
-          const audioBlob = await ttsRes.blob();
+        } else {
+          audioBlob = await cloneWithElevenLabs(apiKey, cleanScript);
           loadAudioBlobIntoPlayer(audioBlob, 'Cloned (ElevenLabs)');
           showToast('Voice Clone berhasil dibuat dengan ElevenLabs!', 'success');
         }
@@ -1101,23 +1171,29 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       } catch (err) {
         console.error(err);
         audioStatusTag.textContent = 'Gagal clone';
-        showToast(`${err.message}. Pastikan API Key valid & ekstensi CORS aktif jika perlu.`, 'error');
+        showToast(err.message || 'Gagal memproses Voice Clone. Periksa API Key Anda.', 'error');
       } finally {
         btnGenerate.disabled = false;
-        btnGenerateText.textContent = '🎙️ Generate Voice Clone';
+        updateCloneProviderUI();
       }
     }
 
-    async function generateGeminiTTS(isAcousticMatched = false) {
+    async function generateGeminiTTS() {
       const rawText = scriptInput.value.trim();
       if (!rawText) {
         showToast('Tulis naskah terlebih dahulu sebelum generate!', 'error');
         return;
       }
 
+      const apiKey = geminiApiKeyInput.value.trim();
+      if (!apiKey) {
+        showToast('Masukkan Gemini API Key terlebih dahulu!', 'error');
+        return;
+      }
+
       const cleanScript = prepareSpeechText(rawText);
       const selectedVoice = geminiVoiceSelect.value;
-      const selectedStyle = geminiStyleSelect.value;
+      const selectedStyle = geminiStyleInput.value;
       const rate = parseFloat(rateSlider.value);
       const pitchShift = parseInt(pitchSlider.value, 10);
 
@@ -1133,14 +1209,10 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       const promptText = `Bacakan naskah berikut dengan gaya ${selectedStyle}, ${speedInstruction}${pitchInstruction}, artikulasi jernih tanpa membaca tanda kurung:\n\n${cleanScript}`;
 
       btnGenerate.disabled = true;
-      btnGenerateText.textContent = 'Memproses Suara AI...';
+      btnGenerateText.textContent = 'Memproses Suara Gemini...';
       audioStatusTag.textContent = 'Generating...';
 
       try {
-        const apiKey = geminiApiKeyInput.value.trim() || "";
-        if (!apiKey) {
-          throw new Error('Masukkan Gemini API Key terlebih dahulu!');
-        }
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
 
         const payload = {
@@ -1148,7 +1220,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
             parts: [{ text: promptText }]
           }],
           generationConfig: {
-            responseModalities: ["AUDIO"],
+            responseModalities: ['AUDIO'],
             speechConfig: {
               voiceConfig: {
                 prebuiltVoiceConfig: {
@@ -1157,7 +1229,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
               }
             }
           },
-          model: "gemini-2.5-flash-preview-tts"
+          model: 'gemini-2.5-flash-preview-tts'
         };
 
         const result = await fetchWithBackoff(apiUrl, payload);
@@ -1166,7 +1238,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         const mimeType = part?.inlineData?.mimeType || '';
 
         if (!audioData || !mimeType.startsWith('audio/')) {
-          throw new Error('Respons audio tidak valid dari server.');
+          throw new Error('Respons audio tidak valid dari server Gemini.');
         }
 
         const rateMatch = mimeType.match(/rate=(\d+)/);
@@ -1176,12 +1248,8 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         const pcm16 = new Int16Array(pcmBuffer);
         const wavBlob = pcmToWav(pcm16, sampleRate);
 
-        loadAudioBlobIntoPlayer(
-          wavBlob,
-          isAcousticMatched ? `Acoustic Match (${selectedVoice})` : `Gemini (${selectedVoice})`
-        );
-
-        showToast('Audio VO berhasil dibuat! Siap diputar & diunduh (vo.wav).', 'success');
+        loadAudioBlobIntoPlayer(wavBlob, `Gemini (${selectedVoice})`);
+        showToast('Audio VO Gemini berhasil dibuat! Siap diputar & diunduh (vo.wav).', 'success');
 
         setupAudioVisualizer();
         await audioPlayer.play();
@@ -1190,10 +1258,10 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       } catch (err) {
         console.error(err);
         audioStatusTag.textContent = 'Gagal generate';
-        showToast(err.message || 'Gagal memproses Gemini TTS. Periksa API Key atau coba tab "Browser".', 'error');
+        showToast(err.message || 'Gagal memproses Gemini TTS. Periksa API Key Anda.', 'error');
       } finally {
         btnGenerate.disabled = false;
-        btnGenerateText.textContent = activeEngine === 'clone' ? '🎙️ Generate Voice Clone' : '✨ Generate Gemini AI';
+        btnGenerateText.textContent = '✨ Generate Gemini AI';
       }
     }
 
@@ -1209,7 +1277,9 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         return;
       }
 
-      window.speechSynthesis.cancel();
+      stopAllActivePlayback();
+      playerMode = 'speech';
+
       const cleanScript = prepareSpeechText(rawText);
       const utterance = new SpeechSynthesisUtterance(cleanScript);
 
@@ -1224,35 +1294,44 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       utterance.onstart = () => {
         waveformPlaceholder.classList.add('hidden');
         audioStatusTag.textContent = 'Memutar (Browser)';
+        btnPlayPause.disabled = false;
+        audioSeekSlider.disabled = true;
+        audioSeekSlider.value = 0;
+        currentAudioTimeEl.textContent = 'LIVE';
+        totalAudioTimeEl.textContent = estDurationEl.textContent;
+        btnDownload.classList.add('opacity-40', 'pointer-events-none');
+        updatePlayIcon(true);
         startSimulatedWaveform();
       };
 
       utterance.onend = () => {
-        audioStatusTag.textContent = 'Selesai';
+        audioStatusTag.textContent = 'Selesai (Browser)';
+        updatePlayIcon(false);
         stopSimulatedWaveform();
       };
 
       utterance.onerror = () => {
         audioStatusTag.textContent = 'Error Browser TTS';
+        updatePlayIcon(false);
         stopSimulatedWaveform();
       };
 
       window.speechSynthesis.speak(utterance);
-      showToast('Memutar suara browser (untuk ekspor file WAV, gunakan tab Voice Clone atau Gemini AI).', 'info');
+      showToast('Memutar suara browser (untuk unduh file WAV, gunakan Voice Clone atau Gemini AI).', 'info');
     }
 
     btnGenerate.addEventListener('click', () => {
       if (activeEngine === 'clone') {
         generateVoiceClone();
       } else if (activeEngine === 'gemini') {
-        generateGeminiTTS(false);
+        generateGeminiTTS();
       } else {
         playBrowserTTS();
       }
     });
 
     // ==========================================
-    // 7. AUDIO PLAYER & WAVEFORM VISUALIZER
+    // 9. AUDIO PLAYER & WAVEFORM VISUALIZER
     // ==========================================
     function resizeWaveformCanvas() {
       const rect = waveformCanvas.getBoundingClientRect();
@@ -1299,7 +1378,10 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     }
 
     function renderLiveWaveform() {
-      if (audioPlayer.paused) return;
+      if (audioPlayer.paused) {
+        animationFrameId = null;
+        return;
+      }
 
       const w = waveformCanvas.width;
       const h = waveformCanvas.height;
@@ -1329,7 +1411,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       animationFrameId = requestAnimationFrame(renderLiveWaveform);
     }
 
-    let simInterval = null;
     function startSimulatedWaveform() {
       stopSimulatedWaveform();
       simInterval = setInterval(() => {
@@ -1362,11 +1443,27 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     }
 
     function updatePlayIcon(isPlaying) {
-      playPauseIcon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
-      if (window.lucide) lucide.createIcons();
+      playPauseIconWrap.innerHTML = isPlaying ? ICONS.pause : ICONS.play;
     }
 
     btnPlayPause.addEventListener('click', () => {
+      if (playerMode === 'speech' && 'speechSynthesis' in window) {
+        if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+          window.speechSynthesis.pause();
+          updatePlayIcon(false);
+          stopSimulatedWaveform();
+          audioStatusTag.textContent = 'Dijeda (Browser)';
+        } else if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+          updatePlayIcon(true);
+          startSimulatedWaveform();
+          audioStatusTag.textContent = 'Memutar (Browser)';
+        } else {
+          playBrowserTTS();
+        }
+        return;
+      }
+
       if (!audioPlayer.src) return;
       if (audioPlayer.paused) {
         setupAudioVisualizer();
@@ -1384,23 +1481,35 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     });
 
     audioPlayer.addEventListener('timeupdate', () => {
+      if (isSeeking) return;
       currentAudioTimeEl.textContent = formatTime(audioPlayer.currentTime);
       audioSeekSlider.value = Math.floor(audioPlayer.currentTime * 100);
     });
 
     audioPlayer.addEventListener('ended', () => {
       updatePlayIcon(false);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
       drawIdleWaveform();
     });
 
+    audioSeekSlider.addEventListener('pointerdown', () => { isSeeking = true; });
+    audioSeekSlider.addEventListener('pointerup', () => { isSeeking = false; });
     audioSeekSlider.addEventListener('input', () => {
       if (!audioPlayer.duration) return;
-      audioPlayer.currentTime = audioSeekSlider.value / 100;
+      const targetTime = audioSeekSlider.value / 100;
+      currentAudioTimeEl.textContent = formatTime(targetTime);
+      audioPlayer.currentTime = targetTime;
     });
 
     window.addEventListener('resize', resizeWaveformCanvas);
     window.addEventListener('load', resizeWaveformCanvas);
+    window.addEventListener('beforeunload', () => {
+      if (currentAudioUrl) URL.revokeObjectURL(currentAudioUrl);
+      if (templatePreviewUrl) URL.revokeObjectURL(templatePreviewUrl);
+    });
   </script>
 </body>
 
