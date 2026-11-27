@@ -481,9 +481,6 @@
         <!-- Live Waveform Canvas Box -->
         <div class="bg-ink rounded-[22px] border-[3px] border-ink p-3 relative overflow-hidden">
           <canvas id="waveformCanvas" class="w-full h-24 block"></canvas>
-          <div id="waveformPlaceholder" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span class="font-mono text-xs text-mint/70 tracking-wider uppercase">Klik Generate untuk memproses suara</span>
-          </div>
         </div>
 
         <!-- Player Controls & Timecode -->
@@ -613,7 +610,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     const audioPlayer = document.getElementById('audioPlayer');
 
     const waveformCanvas = document.getElementById('waveformCanvas');
-    const waveformPlaceholder = document.getElementById('waveformPlaceholder');
     const waveCtx = waveformCanvas.getContext('2d');
 
     let activeEngine = 'clone'; // 'clone' | 'gemini' | 'browser'
@@ -721,7 +717,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
           body: JSON.stringify(payload)
         });
         if (res.ok) return await res.json();
-        // Jangan retry ulang jika kena kuota 429 atau bad request 400/401/403
         if (res.status === 429 || res.status === 400 || res.status === 401 || res.status === 403 || i === retries - 1) {
           const errText = await res.text();
           throw new Error(`API Error (${res.status}): ${errText.slice(0, 140)}`);
@@ -1063,7 +1058,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       btnDownload.classList.remove('opacity-40', 'pointer-events-none');
       btnPlayPause.disabled = false;
       audioSeekSlider.disabled = false;
-      waveformPlaceholder.classList.add('hidden');
       audioStatusTag.textContent = label;
     }
 
@@ -1071,7 +1065,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       const refText = templateTranscriptInput.value.trim();
       const speedVal = parseFloat(rateSlider.value) || 1.0;
 
-      // Daftar mirror Space F5-TTS gratis (otomatis pindah jika salah satu antre/tidur)
       const f5Spaces = [
         "mrfakename/E2-F5-TTS",
         "SWivid/F5-TTS"
@@ -1288,9 +1281,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       if (pitchShift >= 2) pitchInstruction = ', nada suara lebih tinggi dan cerah';
       else if (pitchShift <= -2) pitchInstruction = ', nada suara lebih rendah dan berat';
 
-      const promptText = `Bacakan naskah berikut dengan gaya ${selectedStyle}, ${speedInstruction}${pitchInstruction}, artikulasi jernih tanpa membaca tanda kurung:
-
-${cleanScript}`;
+      const promptText = `Bacakan naskah berikut dengan gaya ${selectedStyle}, ${speedInstruction}${pitchInstruction}, artikulasi jernih tanpa membaca tanda kurung:\n\n${cleanScript}`;
 
       btnGenerate.disabled = true;
       btnGenerateText.textContent = 'Memproses Suara Gemini...';
@@ -1374,7 +1365,6 @@ ${cleanScript}`;
       utterance.pitch = Math.max(0.5, Math.min(1.5, 1.0 + (semi * 0.08)));
 
       utterance.onstart = () => {
-        waveformPlaceholder.classList.add('hidden');
         audioStatusTag.textContent = 'Memutar (Browser)';
         btnPlayPause.disabled = false;
         audioSeekSlider.disabled = true;
