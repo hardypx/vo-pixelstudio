@@ -301,7 +301,7 @@
               </span>
             </div>
             <div class="relative">
-              <input id="cloneApiKey" type="password" placeholder="Kosongkan untuk antrean publik gratis, atau isi hf_..."
+              <input id="cloneApiKey" type="password" placeholder="Tempel token hf_... atau kosongkan"
                 class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl pl-3.5 pr-9 py-2.5 font-mono text-xs font-bold text-ink focus:outline-none focus:bg-white" />
               <button id="btnToggleCloneKey" type="button" title="Tampilkan / Sembunyikan Token"
                 class="absolute right-3 top-1/2 -translate-y-1/2 text-ink/70 hover:text-ink">
@@ -309,7 +309,7 @@
               </button>
             </div>
             <p id="hfHintText" class="font-mono text-[10.5px] text-ink/70 mt-1">
-              *Gratis total tanpa kartu kredit! Jika antrean publik sibuk, buat token gratis di huggingface.co/settings/tokens.
+              *Gratis total tanpa kartu kredit! Token bisa dibuat gratis di huggingface.co/settings/tokens.
             </p>
           </div>
 
@@ -520,7 +520,6 @@
   <script type="module">
     import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
 
-    // Initialize Lucide Icons safely once on load
     if (window.lucide) {
       lucide.createIcons();
     }
@@ -612,8 +611,8 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     const waveformCanvas = document.getElementById('waveformCanvas');
     const waveCtx = waveformCanvas.getContext('2d');
 
-    let activeEngine = 'clone'; // 'clone' | 'gemini' | 'browser'
-    let playerMode = 'none'; // 'audio' | 'speech' | 'none'
+    let activeEngine = 'clone';
+    let playerMode = 'none';
     let templateAudioFile = null;
     let templatePreviewUrl = null;
     let currentAudioUrl = null;
@@ -661,7 +660,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(8px)';
         setTimeout(() => toast.remove(), 220);
-      }, 4200);
+      }, 4500);
     }
 
     function prepareSpeechText(raw) {
@@ -797,7 +796,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       if (prov === 'hf_f5') {
         cloneApiKeyLabel.textContent = 'HuggingFace Token (Opsional)';
         cloneApiKeyBadge.classList.remove('hidden');
-        cloneApiKeyInput.placeholder = 'Kosongkan untuk antrean gratis, atau isi hf_...';
+        cloneApiKeyInput.placeholder = 'Tempel token hf_... atau kosongkan';
         hfHintText.classList.remove('hidden');
         fishTranscriptGroup.classList.remove('hidden');
         elevenSlidersGroup.classList.add('hidden');
@@ -1067,14 +1066,14 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
 
       const f5Spaces = [
         "mrfakename/E2-F5-TTS",
-        "SWivid/F5-TTS"
+        "abidlabs/E2-F5-TTS"
       ];
 
       let lastErr = null;
 
       for (const spaceId of f5Spaces) {
         try {
-          btnGenerateText.textContent = `Menghubungkan GPU Gratis (${spaceId.split('/')[1]})...`;
+          btnGenerateText.textContent = `Menghubungkan GPU Gratis (${spaceId.split('/')[0]})...`;
           const connectOpts = hfToken ? { token: hfToken } : {};
           const app = await Client.connect(spaceId, connectOpts);
 
@@ -1111,7 +1110,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
 
       throw new Error(
         lastErr?.message?.includes('quota') || lastErr?.message?.includes('GPU')
-          ? 'Antrean GPU gratis HuggingFace sedang penuh. Masukkan HF Token gratis (hf_...) atau coba lagi 1 menit.'
+          ? 'Antrean GPU gratis HuggingFace sedang penuh. Coba lagi 1 menit atau gunakan token HF baru.'
           : (lastErr?.message || 'Server F5-TTS HuggingFace sedang sibuk. Coba lagi sebentar.')
       );
     }
