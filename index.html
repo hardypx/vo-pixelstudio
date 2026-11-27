@@ -1075,7 +1075,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       for (const spaceId of f5Spaces) {
         try {
           btnGenerateText.textContent = `Menghubungkan GPU Gratis (${spaceId.split('/')[1]})...`;
-          const connectOpts = hfToken ? { hf_token: hfToken } : {};
+          const connectOpts = hfToken ? { token: hfToken } : {};
           const app = await Client.connect(spaceId, connectOpts);
 
           btnGenerateText.textContent = 'Mengkloning Suara (F5-TTS)...';
