@@ -166,7 +166,7 @@
         <div id="engineBadge"
           class="hidden md:flex items-center gap-2 bg-canvas border-2 border-ink rounded-full px-3.5 py-1.5 font-mono text-xs font-bold">
           <span class="w-2.5 h-2.5 rounded-full bg-teal live-dot"></span>
-          <span id="engineBadgeText">FISH AUDIO READY</span>
+          <span id="engineBadgeText">FREE F5-TTS READY</span>
         </div>
       </div>
     </div>
@@ -274,41 +274,49 @@
           </button>
         </div>
 
-        <!-- TAB 1: VOICE CLONE (FISH AUDIO & ELEVENLABS) -->
+        <!-- TAB 1: VOICE CLONE (FREE HUGGINGFACE F5-TTS, FISH AUDIO, ELEVENLABS) -->
         <div id="cloneOptions" class="mt-4 space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label for="cloneProvider" class="block font-mono text-[11px] font-extrabold uppercase mb-1">Provider Voice Clone</label>
-              <div class="relative">
-                <select id="cloneProvider"
-                  class="w-full appearance-none bg-canvas border-[2.5px] border-ink rounded-2xl px-3.5 py-2.5 font-sans text-xs font-bold text-ink focus:outline-none focus:bg-white">
-                  <option value="fish">🐟 Fish Audio (Instant Clone)</option>
-                  <option value="elevenlabs">🎙️ ElevenLabs (Instant Clone)</option>
-                </select>
-                <i data-lucide="chevron-down"
-                  class="w-4 h-4 text-ink absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-              </div>
+          <div>
+            <label for="cloneProvider" class="block font-mono text-[11px] font-extrabold uppercase mb-1">Provider Voice Clone</label>
+            <div class="relative">
+              <select id="cloneProvider"
+                class="w-full appearance-none bg-canvas border-[2.5px] border-ink rounded-2xl px-3.5 py-2.5 font-sans text-xs font-bold text-ink focus:outline-none focus:bg-white">
+                <option value="hf_f5">🤗 HuggingFace F5-TTS (100% Gratis Tanpa Saldo)</option>
+                <option value="fish">🐟 Fish Audio (Butuh Saldo API)</option>
+                <option value="elevenlabs">🎙️ ElevenLabs (Instant Clone)</option>
+              </select>
+              <i data-lucide="chevron-down"
+                class="w-4 h-4 text-ink absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
             </div>
+          </div>
 
-            <div>
-              <label id="cloneApiKeyLabel" for="cloneApiKey" class="block font-mono text-[11px] font-extrabold uppercase mb-1">
-                Fish Audio API Key
+          <!-- API Key / HF Token Group -->
+          <div id="cloneApiKeyGroup">
+            <div class="flex items-center justify-between mb-1">
+              <label id="cloneApiKeyLabel" for="cloneApiKey" class="font-mono text-[11px] font-extrabold uppercase">
+                HuggingFace Token (Opsional — Gratis)
               </label>
-              <div class="relative">
-                <input id="cloneApiKey" type="password" placeholder="Tempel Fish API Key..."
-                  class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl pl-3.5 pr-9 py-2.5 font-mono text-xs font-bold text-ink focus:outline-none focus:bg-white" />
-                <button id="btnToggleCloneKey" type="button" title="Tampilkan / Sembunyikan API Key"
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-ink/70 hover:text-ink">
-                  <span id="cloneEyeWrap"><i data-lucide="eye" class="w-3.5 h-3.5"></i></span>
-                </button>
-              </div>
+              <span id="cloneApiKeyBadge" class="font-mono text-[10px] font-extrabold bg-mint text-ink border border-ink px-2 py-0.5 rounded-full">
+                TANPA SALDO
+              </span>
             </div>
+            <div class="relative">
+              <input id="cloneApiKey" type="password" placeholder="Kosongkan untuk antrean publik gratis, atau isi hf_..."
+                class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl pl-3.5 pr-9 py-2.5 font-mono text-xs font-bold text-ink focus:outline-none focus:bg-white" />
+              <button id="btnToggleCloneKey" type="button" title="Tampilkan / Sembunyikan Token"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-ink/70 hover:text-ink">
+                <span id="cloneEyeWrap"><i data-lucide="eye" class="w-3.5 h-3.5"></i></span>
+              </button>
+            </div>
+            <p id="hfHintText" class="font-mono text-[10.5px] text-ink/70 mt-1">
+              *Gratis total tanpa kartu kredit! Jika antrean publik sibuk, buat token gratis di huggingface.co/settings/tokens.
+            </p>
           </div>
 
           <!-- Upload Reference Template Audio Box -->
           <div>
             <div class="flex items-center justify-between mb-1">
-              <label class="font-mono text-[11px] font-extrabold uppercase">Upload Sampel Suara Template (10–30d)</label>
+              <label class="font-mono text-[11px] font-extrabold uppercase">Upload Sampel Suara Template (5–20d)</label>
               <span id="templateDurationBadge"
                 class="hidden font-mono text-[10px] font-extrabold bg-ink text-mint px-2 py-0.5 rounded-full"></span>
             </div>
@@ -324,7 +332,7 @@
                   Klik atau tarik file template suara (.mp3 / .wav)
                 </p>
                 <p class="font-mono text-[11px] text-ink/70">
-                  Gunakan rekaman suara bersih 10–30 detik untuk ditiru
+                  Gunakan rekaman suara bersih 5–20 detik untuk ditiru
                 </p>
               </div>
             </label>
@@ -342,12 +350,12 @@
             </div>
           </div>
 
-          <!-- Fish Audio Specific: Sample Transcript -->
+          <!-- Sample Transcript (Used by HuggingFace F5-TTS & Fish Audio) -->
           <div id="fishTranscriptGroup">
             <label for="templateTranscript" class="block font-mono text-[11px] font-extrabold uppercase mb-1">
-              Transkrip Sampel (Opsional - Akurasi Fish Audio)
+              Transkrip Sampel (Opsional — Otomatis Terdeteksi F5-TTS)
             </label>
-            <input id="templateTranscript" type="text" placeholder="Ketik kalimat yang diucapkan di file sampel..."
+            <input id="templateTranscript" type="text" placeholder="Kosongkan untuk auto-transcribe, atau ketik isi audio sampel..."
               class="w-full bg-canvas border-[2.5px] border-ink rounded-2xl px-3.5 py-2.5 font-sans text-xs font-medium text-ink focus:outline-none focus:bg-white" />
           </div>
 
@@ -454,7 +462,7 @@
         <button id="btnGenerate" type="button"
           class="mt-5 w-full btn-brutal bg-teal text-white border-[3px] border-ink rounded-[22px] py-3.5 px-5 font-extrabold text-base sm:text-lg shadow-brutal flex items-center justify-center gap-2.5 disabled:opacity-60 disabled:cursor-not-allowed">
           <i data-lucide="mic-2" class="w-5 h-5"></i>
-          <span id="btnGenerateText">🐟 Generate Fish Clone</span>
+          <span id="btnGenerateText">🤗 Generate Free Clone (F5-TTS)</span>
         </button>
       </div>
 
@@ -512,7 +520,9 @@
   <!-- Hidden Native Audio Element -->
   <audio id="audioPlayer"></audio>
 
-  <script>
+  <script type="module">
+    import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+
     // Initialize Lucide Icons safely once on load
     if (window.lucide) {
       lucide.createIcons();
@@ -562,7 +572,9 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     // Voice Clone Elements
     const cloneProviderSelect = document.getElementById('cloneProvider');
     const cloneApiKeyLabel = document.getElementById('cloneApiKeyLabel');
+    const cloneApiKeyBadge = document.getElementById('cloneApiKeyBadge');
     const cloneApiKeyInput = document.getElementById('cloneApiKey');
+    const hfHintText = document.getElementById('hfHintText');
     const btnToggleCloneKey = document.getElementById('btnToggleCloneKey');
     const cloneEyeWrap = document.getElementById('cloneEyeWrap');
     const fishTranscriptGroup = document.getElementById('fishTranscriptGroup');
@@ -617,7 +629,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     let simInterval = null;
     let isSeeking = false;
 
-    // Inline SVG templates to avoid repeated DOM-wide lucide.createIcons() scans
     const ICONS = {
       play: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#071B2B" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
       pause: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#071B2B" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg>',
@@ -654,7 +665,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(8px)';
         setTimeout(() => toast.remove(), 220);
-      }, 3800);
+      }, 4200);
     }
 
     function prepareSpeechText(raw) {
@@ -701,8 +712,8 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       estDurationEl.textContent = formatTime(estSeconds);
     }
 
-    async function fetchWithBackoff(url, payload, retries = 3) {
-      let delay = 800;
+    async function fetchWithBackoff(url, payload, retries = 2) {
+      let delay = 900;
       for (let i = 0; i < retries; i++) {
         const res = await fetch(url, {
           method: 'POST',
@@ -710,9 +721,10 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
           body: JSON.stringify(payload)
         });
         if (res.ok) return await res.json();
-        if (i === retries - 1) {
+        // Jangan retry ulang jika kena kuota 429 atau bad request 400/401/403
+        if (res.status === 429 || res.status === 400 || res.status === 401 || res.status === 403 || i === retries - 1) {
           const errText = await res.text();
-          throw new Error(`API Error (${res.status}): ${errText.slice(0, 120)}`);
+          throw new Error(`API Error (${res.status}): ${errText.slice(0, 140)}`);
         }
         await new Promise(r => setTimeout(r, delay));
         delay *= 2;
@@ -769,14 +781,16 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     // 4. API KEY & PROVIDER STATE MANAGEMENT
     // ==========================================
     function getCloneStorageKey(provider) {
-      return provider === 'fish' ? 'hardy_fish_api_key' : 'hardy_eleven_api_key';
+      if (provider === 'hf_f5') return 'hardy_hf_token';
+      if (provider === 'fish') return 'hardy_fish_api_key';
+      return 'hardy_eleven_api_key';
     }
 
-    const savedProvider = localStorage.getItem('hardy_clone_provider') === 'elevenlabs' ? 'elevenlabs' : 'fish';
-    cloneProviderSelect.value = savedProvider;
-    const legacyCloneKey = localStorage.getItem('hardy_clone_api_key');
-    if (legacyCloneKey && !localStorage.getItem(getCloneStorageKey(savedProvider))) {
-      localStorage.setItem(getCloneStorageKey(savedProvider), legacyCloneKey);
+    const savedProvider = localStorage.getItem('hardy_clone_provider') || 'hf_f5';
+    if (['hf_f5', 'fish', 'elevenlabs'].includes(savedProvider)) {
+      cloneProviderSelect.value = savedProvider;
+    } else {
+      cloneProviderSelect.value = 'hf_f5';
     }
 
     geminiApiKeyInput.value = localStorage.getItem('hardy_gemini_api_key') || '';
@@ -785,9 +799,22 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       const prov = cloneProviderSelect.value;
       localStorage.setItem('hardy_clone_provider', prov);
 
-      if (prov === 'fish') {
+      if (prov === 'hf_f5') {
+        cloneApiKeyLabel.textContent = 'HuggingFace Token (Opsional)';
+        cloneApiKeyBadge.classList.remove('hidden');
+        cloneApiKeyInput.placeholder = 'Kosongkan untuk antrean gratis, atau isi hf_...';
+        hfHintText.classList.remove('hidden');
+        fishTranscriptGroup.classList.remove('hidden');
+        elevenSlidersGroup.classList.add('hidden');
+        if (activeEngine === 'clone') {
+          btnGenerateText.textContent = '🤗 Generate Free Clone (F5-TTS)';
+          engineBadgeText.textContent = 'FREE F5-TTS READY';
+        }
+      } else if (prov === 'fish') {
         cloneApiKeyLabel.textContent = 'Fish Audio API Key';
+        cloneApiKeyBadge.classList.add('hidden');
         cloneApiKeyInput.placeholder = 'Tempel Fish API Key...';
+        hfHintText.classList.add('hidden');
         fishTranscriptGroup.classList.remove('hidden');
         elevenSlidersGroup.classList.add('hidden');
         if (activeEngine === 'clone') {
@@ -796,7 +823,9 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         }
       } else {
         cloneApiKeyLabel.textContent = 'ElevenLabs API Key';
+        cloneApiKeyBadge.classList.add('hidden');
         cloneApiKeyInput.placeholder = 'Tempel ElevenLabs Key...';
+        hfHintText.classList.add('hidden');
         fishTranscriptGroup.classList.add('hidden');
         elevenSlidersGroup.classList.remove('hidden');
         if (activeEngine === 'clone') {
@@ -914,8 +943,8 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       if (isFinite(dur)) {
         templateDurationBadge.textContent = `Durasi: ${formatTime(dur)}`;
         templateDurationBadge.classList.remove('hidden');
-        if (dur > 45) {
-          showToast('Tips: Sampel di atas 45 detik berisiko timeout. Idealnya 10–30 detik.', 'info');
+        if (dur > 25) {
+          showToast('Tips: Untuk F5-TTS gratis, sampel 5–15 detik paling cepat & akurat.', 'info');
         }
       }
     });
@@ -1038,6 +1067,62 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       audioStatusTag.textContent = label;
     }
 
+    async function cloneWithHuggingFaceF5(hfToken, cleanScript) {
+      const refText = templateTranscriptInput.value.trim();
+      const speedVal = parseFloat(rateSlider.value) || 1.0;
+
+      // Daftar mirror Space F5-TTS gratis (otomatis pindah jika salah satu antre/tidur)
+      const f5Spaces = [
+        "mrfakename/E2-F5-TTS",
+        "SWivid/F5-TTS"
+      ];
+
+      let lastErr = null;
+
+      for (const spaceId of f5Spaces) {
+        try {
+          btnGenerateText.textContent = `Menghubungkan GPU Gratis (${spaceId.split('/')[1]})...`;
+          const connectOpts = hfToken ? { hf_token: hfToken } : {};
+          const app = await Client.connect(spaceId, connectOpts);
+
+          btnGenerateText.textContent = 'Mengkloning Suara (F5-TTS)...';
+          const result = await app.predict("/basic_tts", {
+            ref_audio_input: templateAudioFile,
+            ref_text_input: refText,
+            gen_text_input: cleanScript,
+            remove_silence: false,
+            cross_fade_duration_slider: 0.15,
+            nfe_slider: 32,
+            speed_slider: speedVal
+          });
+
+          const outputAudio = Array.isArray(result?.data) ? result.data[0] : null;
+          const audioUrl = typeof outputAudio === 'string' ? outputAudio : outputAudio?.url;
+
+          if (!audioUrl) {
+            throw new Error(`Output audio kosong dari ${spaceId}`);
+          }
+
+          const fetchHeaders = hfToken ? { Authorization: `Bearer ${hfToken}` } : {};
+          const audioRes = await fetch(audioUrl, { headers: fetchHeaders });
+          if (!audioRes.ok) {
+            throw new Error(`Gagal mengunduh hasil audio (${audioRes.status})`);
+          }
+
+          return await audioRes.blob();
+        } catch (err) {
+          console.warn(`Gagal di ${spaceId}:`, err);
+          lastErr = err;
+        }
+      }
+
+      throw new Error(
+        lastErr?.message?.includes('quota') || lastErr?.message?.includes('GPU')
+          ? 'Antrean GPU gratis HuggingFace sedang penuh. Masukkan HF Token gratis (hf_...) atau coba lagi 1 menit.'
+          : (lastErr?.message || 'Server F5-TTS HuggingFace sedang sibuk. Coba lagi sebentar.')
+      );
+    }
+
     async function cloneWithFishAudio(apiKey, cleanScript) {
       if (window.location.protocol === 'file:') {
         throw new Error('Buka lewat URL Vercel (https://) agar proxy /api/fish-tts berjalan');
@@ -1135,7 +1220,8 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
 
       const provider = cloneProviderSelect.value;
       const apiKey = cloneApiKeyInput.value.trim();
-      if (!apiKey) {
+
+      if (provider !== 'hf_f5' && !apiKey) {
         showToast(`Masukkan API Key ${provider === 'fish' ? 'Fish Audio' : 'ElevenLabs'} terlebih dahulu!`, 'error');
         return;
       }
@@ -1148,7 +1234,11 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
 
       try {
         let audioBlob;
-        if (provider === 'fish') {
+        if (provider === 'hf_f5') {
+          audioBlob = await cloneWithHuggingFaceF5(apiKey, cleanScript);
+          loadAudioBlobIntoPlayer(audioBlob, 'Cloned (Free F5-TTS)');
+          showToast('Voice Clone gratis (F5-TTS) berhasil dibuat!', 'success');
+        } else if (provider === 'fish') {
           audioBlob = await cloneWithFishAudio(apiKey, cleanScript);
           loadAudioBlobIntoPlayer(audioBlob, 'Cloned (Fish Audio)');
           showToast('Voice Clone berhasil dibuat dengan Fish Audio!', 'success');
@@ -1163,7 +1253,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       } catch (err) {
         console.error(err);
         audioStatusTag.textContent = 'Gagal clone';
-        showToast(err.message || 'Gagal memproses Voice Clone. Periksa API Key Anda.', 'error');
+        showToast(err.message || 'Gagal memproses Voice Clone.', 'error');
       } finally {
         btnGenerate.disabled = false;
         updateCloneProviderUI();
@@ -1198,7 +1288,9 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
       if (pitchShift >= 2) pitchInstruction = ', nada suara lebih tinggi dan cerah';
       else if (pitchShift <= -2) pitchInstruction = ', nada suara lebih rendah dan berat';
 
-      const promptText = `Bacakan naskah berikut dengan gaya ${selectedStyle}, ${speedInstruction}${pitchInstruction}, artikulasi jernih tanpa membaca tanda kurung:\n\n${cleanScript}`;
+      const promptText = `Bacakan naskah berikut dengan gaya ${selectedStyle}, ${speedInstruction}${pitchInstruction}, artikulasi jernih tanpa membaca tanda kurung:
+
+${cleanScript}`;
 
       btnGenerate.disabled = true;
       btnGenerateText.textContent = 'Memproses Suara Gemini...';
