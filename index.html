@@ -1078,15 +1078,12 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
           const app = await Client.connect(spaceId, connectOpts);
 
           btnGenerateText.textContent = 'Mengkloning Suara (F5-TTS)...';
-          const result = await app.predict("/basic_tts", {
-            ref_audio_input: templateAudioFile,
-            ref_text_input: refText,
-            gen_text_input: cleanScript,
-            remove_silence: false,
-            cross_fade_duration_slider: 0.15,
-            nfe_slider: 32,
-            speed_slider: speedVal
-          });
+const result = await app.predict("/predict", [
+            templateAudioFile,
+            refText,
+            cleanScript,
+            "F5-TTS"
+          ]);
 
           const outputAudio = Array.isArray(result?.data) ? result.data[0] : null;
           const audioUrl = typeof outputAudio === 'string' ? outputAudio : outputAudio?.url;
