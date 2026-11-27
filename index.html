@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pixelStudio — AI Voice-Over Maker</title>
+  <title>pixelStudio-VO — AI Voice-Over Maker</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -161,17 +161,13 @@
         </div>
       </div>
 
-      <!-- Right: Status Pill & Handle Badge -->
+      <!-- Right: Status Pill -->
       <div class="flex items-center gap-3">
         <div id="engineBadge"
           class="hidden md:flex items-center gap-2 bg-canvas border-2 border-ink rounded-full px-3.5 py-1.5 font-mono text-xs font-bold">
           <span class="w-2.5 h-2.5 rounded-full bg-teal live-dot"></span>
           <span id="engineBadgeText">FISH AUDIO READY</span>
         </div>
-        <span
-          class="bg-mint border-[2.5px] border-ink rounded-full px-4 py-1.5 font-mono text-xs sm:text-sm font-extrabold shadow-brutal-sm">
-          @hardy.px
-        </span>
       </div>
     </div>
   </header>
@@ -506,7 +502,7 @@
           <span>Download Audio (vo.wav)</span>
         </a>
         <p class="font-mono text-[11px] text-center text-ink/60 mt-2">
-          Siap langsung dipakai di template video motion <strong class="text-ink">@hardy.px</strong>
+          Siap langsung dipakai di template video motion
         </p>
       </div>
 
@@ -514,7 +510,7 @@
   </main>
 
   <!-- Hidden Native Audio Element -->
-  <audio id="audioPlayer" crossorigin="anonymous"></audio>
+  <audio id="audioPlayer"></audio>
 
   <script>
     // Initialize Lucide Icons safely once on load
@@ -671,7 +667,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     }
 
     function stopAllActivePlayback() {
-      // Stop HTML5 Audio
       if (!audioPlayer.paused) {
         audioPlayer.pause();
       }
@@ -679,7 +674,6 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
       }
-      // Stop Web Speech Synthesis
       if ('speechSynthesis' in window && (window.speechSynthesis.speaking || window.speechSynthesis.paused)) {
         window.speechSynthesis.cancel();
       }
@@ -1164,9 +1158,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
           showToast('Voice Clone berhasil dibuat dengan ElevenLabs!', 'success');
         }
 
-        setupAudioVisualizer();
         await audioPlayer.play();
-        updatePlayIcon(true);
 
       } catch (err) {
         console.error(err);
@@ -1251,9 +1243,7 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
         loadAudioBlobIntoPlayer(wavBlob, `Gemini (${selectedVoice})`);
         showToast('Audio VO Gemini berhasil dibuat! Siap diputar & diunduh (vo.wav).', 'success');
 
-        setupAudioVisualizer();
         await audioPlayer.play();
-        updatePlayIcon(true);
 
       } catch (err) {
         console.error(err);
@@ -1362,42 +1352,71 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
     }
 
     function setupAudioVisualizer() {
-      if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContextClass();
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 128;
-        mediaSource = audioCtx.createMediaElementSource(audioPlayer);
-        mediaSource.connect(analyser);
-        analyser.connect(audioCtx.destination);
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 128;
+          analyser.smoothingTimeConstant = 0.78;
+          mediaSource = audioCtx.createMediaElementSource(audioPlayer);
+          mediaSource.connect(analyser);
+          analyser.connect(audioCtx.destination);
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      } catch (e) {
+        console.warn('AudioContext fallback aktif:', e);
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
       }
-      renderLiveWaveform();
+      animationFrameId = requestAnimationFrame(renderLiveWaveform);
     }
 
     function renderLiveWaveform() {
-      if (audioPlayer.paused) {
+      if (audioPlayer.paused || audioPlayer.ended) {
         animationFrameId = null;
         return;
       }
 
       const w = waveformCanvas.width;
       const h = waveformCanvas.height;
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-      analyser.getByteFrequencyData(dataArray);
-
       waveCtx.clearRect(0, 0, w, h);
 
       const bars = 48;
       const gap = 4 * window.devicePixelRatio;
       const barWidth = (w - (bars - 1) * gap) / bars;
 
+      let hasLiveSignal = false;
+      let dataArray = null;
+      let bufferLength = 0;
+
+      if (analyser) {
+        bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+        analyser.getByteFrequencyData(dataArray);
+        for (let k = 0; k < bufferLength; k++) {
+          if (dataArray[k] > 2) {
+            hasLiveSignal = true;
+            break;
+          }
+        }
+      }
+
+      const now = performance.now() * 0.008;
+
       for (let i = 0; i < bars; i++) {
-        const dataIndex = Math.floor((i / bars) * (bufferLength * 0.75));
-        const val = dataArray[dataIndex] / 255;
+        let val = 0;
+        if (hasLiveSignal && dataArray) {
+          const dataIndex = Math.floor((i / bars) * (bufferLength * 0.75));
+          val = dataArray[dataIndex] / 255;
+        } else {
+          const wave = Math.sin(now + i * 0.45) * 0.35 + Math.cos(now * 1.4 - i * 0.3) * 0.25 + 0.45;
+          val = Math.max(0.12, Math.min(0.95, wave));
+        }
+
         const barHeight = Math.max(8 * window.devicePixelRatio, val * h * 0.85);
         const x = i * (barWidth + gap);
         const y = (h - barHeight) / 2;
@@ -1466,13 +1485,24 @@ Menurutmu, apa lagi yang AI nggak bisa gantiin? [jeda 0.3s] Tulis di komentar, [
 
       if (!audioPlayer.src) return;
       if (audioPlayer.paused) {
-        setupAudioVisualizer();
         audioPlayer.play();
-        updatePlayIcon(true);
       } else {
         audioPlayer.pause();
-        updatePlayIcon(false);
       }
+    });
+
+    audioPlayer.addEventListener('playing', () => {
+      updatePlayIcon(true);
+      setupAudioVisualizer();
+    });
+
+    audioPlayer.addEventListener('pause', () => {
+      updatePlayIcon(false);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      drawIdleWaveform();
     });
 
     audioPlayer.addEventListener('loadedmetadata', () => {
